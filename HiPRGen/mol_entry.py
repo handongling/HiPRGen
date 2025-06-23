@@ -183,12 +183,20 @@ class MoleculeEntry:
             if doc['number_atoms'] == 1:
                 partial_charges_nbo = doc['partial_charges']['mulliken']
                 partial_spins_nbo = doc['partial_spins']['mulliken']
-            elif 'nbo' in doc['partial_charges']:
+            elif 'nbo' in doc['partial_charges'] and 'nbo' in doc['partial_spins']:
                 partial_charges_nbo = doc['partial_charges']['nbo']
                 partial_spins_nbo = doc['partial_spins']['nbo']
-            else:
+            elif 'critic2' in doc['partial_charges'] and 'critic2' in doc['partial_spins']:
                 partial_charges_nbo = doc['partial_charges']['critic2']
                 partial_spins_nbo = doc['partial_spins']['critic2']
+            elif 'resp' in doc['partial_charges'] and 'resp' in doc['partial_spins']:
+                partial_charges_nbo = doc['partial_charges']['resp']
+                partial_spins_nbo = doc['partial_spins']['resp']
+            # If no NBO or RESP charges are available, default to Mulliken charges
+            elif 'mulliken' in doc['partial_charges'] and 'mulliken' in doc['partial_spins']:
+                partial_charges_nbo = doc['partial_charges']['mulliken']
+                partial_spins_nbo = doc['partial_spins']['mulliken']
+
 
             electron_affinity_eV = None
             ionization_energy_eV = None
