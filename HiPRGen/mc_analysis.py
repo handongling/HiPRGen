@@ -916,13 +916,12 @@ class SimulationReplayer:
     def time_series_graph(
             self,
             seeds,
-            species_of_interest,
             path,
+            species_of_interest = 'auto',
             colors = list(mcolors.TABLEAU_COLORS.values()),
             styles = ['solid', 'dotted', 'dashed', 'dashdot'],
             internal_index_labels=True
     ):
-
 
         max_trajectory_length = 0
         for seed in seeds:
@@ -942,6 +941,15 @@ class SimulationReplayer:
 
         total_time_series = total_time_series / len(seeds)
 
+        if species_of_interest == 'auto':
+            final_concentrations = total_time_series[-1,:]
+            top_ten_index = np.argsort(final_concentrations)[-10:]
+            species_of_interest = set(top_ten_index)
+        elif type(species_of_interest) is int:
+            top_index = np.argsort(final_concentrations)[-species_of_interest:]
+            species_of_interest = set(top_index)
+        print(final_concentrations)
+        print(species_of_interest)
         background_species = set()
         for index in range(self.network_loader.number_of_species):
             for step in range(max_trajectory_length):
